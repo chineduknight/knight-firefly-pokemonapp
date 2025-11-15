@@ -1,4 +1,3 @@
-// src/components/common/ErrorState.tsx
 import { Button, Center, Text, VStack } from "@chakra-ui/react";
 
 interface ErrorStateProps {

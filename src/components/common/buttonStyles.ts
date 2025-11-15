@@ -1,13 +1,10 @@
 // https://github.com/chakra-ui/chakra-ui/blob/main/packages/theme/components/input.ts
 export const ButtonStyles = {
-  // style object for base or default style
   baseStyle: {
     outline: "none",
     _focus: { boxShadow: "none" },
   },
-  // styles for different sizes ("sm", "md", "lg")
   sizes: {},
-  // styles for different visual variants ("outline", "solid")
   variants: {
     primary: () => ({
       bg: "#ffcc00",
@@ -53,7 +50,6 @@ export const ButtonStyles = {
       },
     }),
   },
-  // default values for `size` and `variant`
   defaultProps: {
     variant: "primary",
   },

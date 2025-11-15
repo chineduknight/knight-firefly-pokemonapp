@@ -16,10 +16,12 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { FaStar } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
 import type { PokemonDetails as PokemonDetailsType } from "../../types/pokemon";
 import Loader from "../common/Loader";
 import ErrorState from "../common/ErrorState";
+import EvolutionSection from "./EvolutionSection";
 
 interface PokemonDetailsProps {
   isOpen: boolean;
@@ -30,6 +32,7 @@ interface PokemonDetailsProps {
   errorMessage: string | null;
   onToggleFavorite: () => void;
   isUpdatingFavorite: boolean;
+  onSelectPokemon: (id: number) => void;
 }
 
 const Section = ({ title, items }: { title: string; items: string[] }) => (
@@ -73,6 +76,7 @@ const EmptyState = () => (
     <Text color="gray.500">Select a Pokémon to see details.</Text>
   </Box>
 );
+const MotionBox = motion.create(Box);
 
 const PokemonDetailsDialog = ({
   isOpen,
@@ -83,6 +87,7 @@ const PokemonDetailsDialog = ({
   errorMessage,
   onToggleFavorite,
   isUpdatingFavorite,
+  onSelectPokemon,
 }: PokemonDetailsProps) => {
   const showEmpty = !isLoading && !isError && !pokemon;
 
@@ -90,9 +95,8 @@ const PokemonDetailsDialog = ({
   const spriteUrl = pokemon?.spriteUrl ?? "";
   const types = pokemon?.types ?? [];
   const abilities = pokemon?.abilities ?? [];
-  const evolutions = pokemon?.evolutions?.map((e) => e.name) ?? [];
+  const evolutions = pokemon?.evolutions ?? [];
   const isFavorite = Boolean(pokemon?.isFavorite);
-
   return (
     <Dialog.Root open={isOpen} onOpenChange={(e) => !e.open && onClose()}>
       <Portal>
@@ -105,6 +109,8 @@ const PokemonDetailsDialog = ({
             px={4}
             py={4}
             bg="orange.50"
+            boxShadow="lg"
+            height="552px"
           >
             <Dialog.Header pb={2}>
               <Flex align="center" justify="space-between" gap={4}>
@@ -136,7 +142,6 @@ const PokemonDetailsDialog = ({
                   >
                     <Icon
                       as={FaStar}
-                      // subtle extra: stronger icon color when favorited
                       color={isFavorite ? "yellow.500" : "gray.500"}
                     />
                     {isFavorite ? "Unfavorite" : "Favorite"}
@@ -150,52 +155,63 @@ const PokemonDetailsDialog = ({
             </Dialog.CloseTrigger>
 
             <Dialog.Body pt={4}>
-              {isLoading ? (
-                <Center minH="200px">
-                  <Loader message="Loading details..." />
-                </Center>
-              ) : isError ? (
-                <Center minH="200px">
-                  <ErrorState
-                    message={errorMessage ?? "Failed to load Pokémon details"}
-                  />
-                </Center>
-              ) : showEmpty ? (
-                <Center minH="200px">
-                  <EmptyState />
-                </Center>
-              ) : (
-                <Box>
-                  <Flex align="center" justify="center" mb={4}>
-                    {spriteUrl ? (
-                      <Image
-                        src={spriteUrl}
-                        alt={name}
-                        boxSize="150px"
-                        objectFit="cover"
-                        borderRadius="full"
-                        borderWidth="4px"
-                        borderColor="orange.200"
-                        borderStyle="solid"
-                      />
-                    ) : (
-                      <Box
-                        boxSize="150px"
-                        borderRadius="full"
-                        borderWidth="4px"
-                        borderColor="orange.200"
-                        borderStyle="solid"
-                      />
-                    )}
-                  </Flex>
+              <AnimatePresence mode="wait">
+                {isLoading ? (
+                  <Center key="loading" minH="200px">
+                    <Loader message="Loading details..." />
+                  </Center>
+                ) : isError ? (
+                  <Center key="error" minH="200px">
+                    <ErrorState
+                      message={errorMessage ?? "Failed to load Pokémon details"}
+                    />
+                  </Center>
+                ) : showEmpty ? (
+                  <Center key="empty" minH="200px">
+                    <EmptyState />
+                  </Center>
+                ) : (
+                  <MotionBox
+                    key={pokemon?.id ?? "pokemon"}
+                    initial={{ opacity: 0, y: 10, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.97 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                  >
+                    <Flex align="center" justify="center" mb={4}>
+                      {spriteUrl ? (
+                        <Image
+                          src={spriteUrl}
+                          alt={name}
+                          boxSize="150px"
+                          objectFit="cover"
+                          borderRadius="full"
+                          borderWidth="4px"
+                          borderColor="orange.200"
+                          borderStyle="solid"
+                        />
+                      ) : (
+                        <Box
+                          boxSize="150px"
+                          borderRadius="full"
+                          borderWidth="4px"
+                          borderColor="orange.200"
+                          borderStyle="solid"
+                        />
+                      )}
+                    </Flex>
 
-                  <Flex direction="column" gap={6}>
-                    <Section title="Types" items={types} />
-                    <Section title="Abilities" items={abilities} />
-                    <Section title="Evolutions" items={evolutions} />
-                  </Flex>
-                </Box>
-              )}
+                    <Flex direction="column" gap={6}>
+                      <Section title="Types" items={types} />
+                      <Section title="Abilities" items={abilities} />
+                      <EvolutionSection
+                        evolutions={evolutions}
+                        onSelectPokemon={onSelectPokemon}
+                      />
+                    </Flex>
+                  </MotionBox>
+                )}
+              </AnimatePresence>
             </Dialog.Body>
           </Dialog.Content>
         </Dialog.Positioner>

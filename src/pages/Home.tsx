@@ -3,7 +3,7 @@ import { useUiState } from "../hooks/useUiState";
 import SearchBar from "../components/pokemon/SearchBar";
 import { bannerURL } from "../constants";
 import PokemonList from "../components/pokemon/PokemonList";
-import PokeStats from "../components/pokemon/PokeStats";
+import PokemonDetailsDialog from "../components/pokemon/PokemonDetailsDialog";
 import { usePokemonList } from "../hooks/usePokemonList";
 import { useState } from "react";
 import { usePokemonDetails } from "../hooks/usePokemonDetails";
@@ -67,7 +67,7 @@ const Home = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <PokeStats
+      <PokemonDetailsDialog
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         pokemon={selectedPokemon}
@@ -76,6 +76,9 @@ const Home = () => {
         errorMessage={detailsErrorMessage}
         onToggleFavorite={handleToggleFavorite}
         isUpdatingFavorite={isAdding || isRemoving}
+        onSelectPokemon={(id: number) => {
+          setSelectedPokemonId(id);
+        }}
       />
 
       <Image src={bannerURL} />
