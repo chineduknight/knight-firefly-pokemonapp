@@ -67,11 +67,8 @@ Built for **Firefly** as a senior-level demonstration of full-stack proficiency.
 
 ## 🖼️ Screenshots
 
-Add your own images or URLs, e.g.:
-
-```html
-<img src="your-image-url" width="600" />
-```
+![Knight Pokémon App 1](https://res.cloudinary.com/chineduknight/image/upload/v1763304417/samples/Screenshot_2025-11-16_at_3.46.39_PM_wqw2pr.png)
+![Knight Pokémon App 2](https://res.cloudinary.com/chineduknight/image/upload/v1763304416/samples/Screenshot_2025-11-16_at_3.46.30_PM_jkhz9v.png)
 
 ---
 
