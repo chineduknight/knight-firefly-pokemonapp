@@ -32,7 +32,6 @@ const Home = () => {
     hasMore,
     refetch: refetchList,
   } = usePokemonList({ searchTerm, showFavoritesOnly });
-
   const {
     data: selectedPokemon,
     isLoading: isDetailsLoading,
@@ -92,15 +91,17 @@ const Home = () => {
         />
       )}
       {isListLoading || isListError ? null : (
-        <SearchBar value={searchTerm} onChange={setSearchTerm} />
+        <>
+          <SearchBar value={searchTerm} onChange={setSearchTerm} />
+          <FavoritesToggle
+            value={showFavoritesOnly}
+            onChange={setShowFavoritesOnly}
+          />
+          <Text fontSize="xs" color="gray.500" mb={2}>
+            Showing {items.length} / {total}
+          </Text>
+        </>
       )}
-      <FavoritesToggle
-        value={showFavoritesOnly}
-        onChange={setShowFavoritesOnly}
-      />
-      <Text fontSize="xs" color="gray.500" mb={2}>
-        Showing {items.length} / {total}
-      </Text>
       {!isListLoading && !isListError && (
         <PokemonList
           items={items}
@@ -111,6 +112,7 @@ const Home = () => {
           onLoadMore={loadMore}
           hasMore={hasMore}
           showFavoritesOnly={showFavoritesOnly}
+          hasSearchTerm={Boolean(searchTerm.trim())}
         />
       )}
     </Flex>

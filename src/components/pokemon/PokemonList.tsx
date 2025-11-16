@@ -10,6 +10,7 @@ interface PokemonListProps {
   onLoadMore: () => void;
   hasMore: boolean;
   showFavoritesOnly: boolean;
+  hasSearchTerm: boolean;
 }
 
 const PokemonList = ({
@@ -18,6 +19,7 @@ const PokemonList = ({
   onLoadMore,
   hasMore,
   showFavoritesOnly,
+  hasSearchTerm,
 }: PokemonListProps) => {
   if (items.length === 0) {
     return (
@@ -43,7 +45,7 @@ const PokemonList = ({
       ))}
 
       <InfiniteScrollSentinel
-        isActive={hasMore && !showFavoritesOnly}
+        isActive={hasMore && !showFavoritesOnly && !hasSearchTerm}
         onVisible={onLoadMore}
       />
     </Flex>

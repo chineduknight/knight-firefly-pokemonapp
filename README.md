@@ -1,11 +1,11 @@
 # Knight Pokémon – Firefly Assignment (Frontend)
 
-A polished, interactive Pokémon Explorer built as part of the Firefly Full-Stack Engineer take-home assignment.  
+A polished, interactive Pokémon Explorer built as part of the Firefly Full-Stack Engineer take-home assignment.
 This project showcases clean architecture, strong UI/UX, React Query caching, server-driven infinite scrolling, and a beautifully animated Pokémon details modal.
 
-## 🚀 Demo (Optional)
+## 🚀 Demo
 
-If hosted, add link here (e.g. Netlify or Vercel).
+Access my site at [Knight Pokémon App](https://knigt-firefly-pokeapp.netlify.app/).
 
 ## 📘 Table of Contents
 
@@ -25,16 +25,16 @@ If hosted, add link here (e.g. Netlify or Vercel).
 
 ## 🎯 About The App
 
-Knight Pokémon is a modern web app that fetches Pokémon data from a custom backend connected to PokeAPI.  
+Knight Pokémon is a modern web app that fetches Pokémon data from a custom backend connected to PokeAPI.
 It provides a smooth browsing experience with large Pokémon cards, server-driven infinite scrolling, detailed modal views, and favorites management stored in MongoDB.
 
 The application focuses on:
 
-- Clean architecture  
-- Reusable hooks  
-- Component-driven UI  
-- Real-world engineering trade-offs  
-- Exceptional UX polish  
+- Clean architecture
+- Reusable hooks
+- Component-driven UI
+- Real-world engineering trade-offs
+- Exceptional UX polish
 
 Built for **Firefly** as a senior-level demonstration of full-stack proficiency.
 
@@ -79,19 +79,19 @@ Add your own images or URLs, e.g.:
 
 **Frontend:**
 
-- React + Vite  
-- TypeScript  
-- Chakra UI  
-- React Query (`useInfiniteQuery` + `useQuery`)  
-- Axios  
-- Framer Motion  
+- React + Vite
+- TypeScript
+- Chakra UI
+- React Query (`useInfiniteQuery` + `useQuery`)
+- Axios
+- Framer Motion
 
 **Backend:**
 
-- Node.js / Express  
-- TypeScript  
-- MongoDB + Mongoose  
-- PokeAPI  
+- Node.js / Express
+- TypeScript
+- MongoDB + Mongoose
+- PokeAPI
 
 ---
 
@@ -137,7 +137,7 @@ src/
 ### 1. Clone repo
 
 ```bash
-git clone https://github.com/your-username/firefly-pokemon.git
+git clone https://github.com/chineduknight/knight-firefly-pokemonapp
 cd firefly-pokemon/frontend
 ```
 
@@ -171,7 +171,7 @@ http://localhost:5173
 
 ## 🧠 Approach
 
-- **Feature-based architecture** for clarity and scalability  
+- **Feature-based architecture** for clarity and scalability
 - **Reusable hooks** encapsulate business logic:
   - `usePokemonList` – server-driven infinite scroll (`offset`/`limit`, `hasNextPage`)
   - `usePokemonDetails` – Pokémon details + evolution chain
@@ -183,6 +183,7 @@ http://localhost:5173
 - **Clean Code principles**: separation of concerns, typed boundaries, consistent naming, small composable components
 
 Favorites are **canonical on the backend**:
+
 - Frontend sends only the Pokémon ID when favoriting.
 - Backend fetches canonical Pokémon data from PokeAPI and persists it in MongoDB.
 - List and details endpoints mark each Pokémon with `isFavorite`, so the UI never has to manually stitch favorites.
@@ -191,26 +192,26 @@ Favorites are **canonical on the backend**:
 
 ## 🌟 Bonus Enhancements
 
-- In-place evolution navigation inside the modal  
-- Animated detail transitions when switching between Pokémon  
-- Server-driven infinite scroll with `useInfiniteQuery` and `hasNextPage`  
-- Custom loader, error states, and empty states for better UX  
-- Responsive, hover-enhanced card grid  
+- In-place evolution navigation inside the modal
+- Animated detail transitions when switching between Pokémon
+- Server-driven infinite scroll with `useInfiniteQuery` and `hasNextPage`
+- Custom loader, error states, and empty states for better UX
+- Responsive, hover-enhanced card grid
 - Favorites-only view built as a **client-side filter** on the loaded dataset (no unnecessary network calls)
 
 ---
 
 ## 🚧 Status
 
-Production-ready version for the Firefly assignment.  
+Production-ready version for the Firefly assignment.
 Further improvements could include PWA support, offline caching, and advanced search (e.g. by type or ability).
 
 ---
 
 ## 👨🏾‍💻 Credits
 
-Developed by **Chinedu Knight**  
-https://chineduknight.com  
+Developed by **Chinedu Knight**
+https://chineduknight.com
 
 ---
 
