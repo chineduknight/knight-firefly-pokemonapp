@@ -1,9 +1,9 @@
-import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+// src/hooks/usePokemonList.ts
+import { useMemo } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { PokemonApi } from "../api/pokemonApi";
 import type { PokemonListItem, PokemonListResponse } from "../types/pokemon";
 
-const TOTAL_LIMIT = 150;
 const PAGE_SIZE = 30;
 
 interface UsePokemonListOptions {
@@ -20,6 +20,7 @@ interface UsePokemonListResult {
   loadMore: () => void;
   hasMore: boolean;
   refetch: () => void;
+  isFetchingNextPage: boolean;
 }
 
 export const usePokemonList = (
@@ -27,21 +28,37 @@ export const usePokemonList = (
 ): UsePokemonListResult => {
   const { searchTerm = "", showFavoritesOnly = false } = options;
 
-  // How many items we are *currently* showing (for infinite scroll UI)
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+    isFetchingNextPage,
+  } = useInfiniteQuery<PokemonListResponse, Error>({
+    queryKey: ["pokemonList"],
+    queryFn: ({ pageParam = 0 }) =>
+      PokemonApi.getPokemonList(pageParam as number, PAGE_SIZE),
+    getNextPageParam: (lastPage) =>
+      lastPage.page.hasNextPage ? lastPage.page.nextOffset : undefined,
+    staleTime: 1000 * 60,
+    initialPageParam: 0,
+  });
 
-  const { data, isLoading, isError, error, refetch } =
-    useQuery<PokemonListResponse>({
-      queryKey: ["pokemonList"],
-      queryFn: () => PokemonApi.getPokemonList(TOTAL_LIMIT),
-      staleTime: 1000 * 60, // 1 minute cache
-    });
+  const allItems: PokemonListItem[] = useMemo(
+    () => (data?.pages ? data.pages.flatMap((page) => page.items) : []),
+    [data]
+  );
 
-  // Apply filters (search + favorites only) on the full list
-  const filteredItems = useMemo(() => {
-    if (!data?.items) return [];
+  const total: number = useMemo(
+    () => (data?.pages && data.pages.length ? data.pages[0].total : 0),
+    [data]
+  );
 
-    let items = data.items;
+  const filteredItems: PokemonListItem[] = useMemo(() => {
+    let items = allItems;
 
     if (showFavoritesOnly) {
       items = items.filter((item) => item.isFavorite);
@@ -53,29 +70,22 @@ export const usePokemonList = (
     }
 
     return items;
-  }, [data, searchTerm, showFavoritesOnly]);
-
-  // Slice for infinite scroll: show up to visibleCount
-  const slicedItems = useMemo(
-    () => filteredItems.slice(0, visibleCount),
-    [filteredItems, visibleCount]
-  );
-
-  const hasMore = slicedItems.length < filteredItems.length;
+  }, [allItems, searchTerm, showFavoritesOnly]);
 
   const loadMore = () => {
-    if (!hasMore) return;
-    setVisibleCount((prev) => prev + PAGE_SIZE);
+    if (!hasNextPage || isFetchingNextPage) return;
+    fetchNextPage();
   };
 
   return {
-    items: slicedItems,
-    total: filteredItems.length,
+    items: filteredItems,
+    total,
     isLoading,
     isError,
     errorMessage: error instanceof Error ? error.message : null,
     loadMore,
-    hasMore,
+    hasMore: Boolean(hasNextPage),
     refetch,
+    isFetchingNextPage,
   };
 };

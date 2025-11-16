@@ -4,10 +4,17 @@ export interface PokemonListItem {
   spriteUrl: string;
   isFavorite: boolean;
 }
+export interface PokemonListPageMeta {
+  offset: number;
+  limit: number;
+  hasNextPage: boolean;
+  nextOffset: number | null;
+}
 
 export interface PokemonListResponse {
   items: PokemonListItem[];
   total: number;
+  page: PokemonListPageMeta;
 }
 
 export interface PokemonEvolution {
@@ -15,13 +22,9 @@ export interface PokemonEvolution {
   name: string;
 }
 
-export interface PokemonDetails {
-  id: number;
-  name: string;
-  spriteUrl: string;
+export interface PokemonDetails extends PokemonListItem {
   types: string[];
   abilities: string[];
-  isFavorite: boolean;
   evolutions: PokemonEvolution[];
 }
 

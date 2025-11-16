@@ -1,8 +1,6 @@
-// src/api/httpClient.ts
 import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 import type { ApiResponse } from "../types/api";
 
-// You can later make this configurable via Vite env (VITE_API_BASE_URL)
 const baseURL = (import.meta as any).env?.VITE_API_BASE_URL ?? "";
 const client = axios.create({
   baseURL,
@@ -34,7 +32,7 @@ const handleError = (error: unknown): never => {
 };
 
 export const http = {
-  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  async get<T>(url: string, config?: AxiosRequestConfig): Promise<any> {
     try {
       const { data } = await client.get<ApiResponse<T>>(url, config);
       return unwrap<T>(data);
@@ -47,7 +45,7 @@ export const http = {
     url: string,
     body?: unknown,
     config?: AxiosRequestConfig
-  ): Promise<T> {
+  ): Promise<any> {
     try {
       const { data } = await client.post<ApiResponse<T>>(url, body, config);
       return unwrap<T>(data);
@@ -56,16 +54,19 @@ export const http = {
     }
   },
 
-  async delete<T = void>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  async delete<T = void>(
+    url: string,
+    config?: AxiosRequestConfig
+  ): Promise<any> {
     try {
       const { data } = await client.delete<ApiResponse<T>>(url, config);
-      // Some deletes might not have data, handle both cases gracefully
       if (!data) {
         return undefined as T;
       }
       return unwrap<T>(data);
     } catch (err) {
       handleError(err);
+      return undefined;
     }
   },
 };

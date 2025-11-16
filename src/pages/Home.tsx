@@ -110,6 +110,7 @@ const Home = () => {
           }}
           onLoadMore={loadMore}
           hasMore={hasMore}
+          showFavoritesOnly={showFavoritesOnly}
         />
       )}
     </Flex>
